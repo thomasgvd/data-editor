@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class Character : Serializable
+public class Character : Entity
 {
     public Class Class;
     public int HP;
     public int Strength;
     public int AP;
-    public List<Item> Items;
-    public List<Spell> Spells;
+    [SerializeReference] public List<Item> Items;
+    [SerializeReference] public List<Spell> Spells;
 
-    public override void CopyValues(Serializable fromAsset)
+    public override void CopyValues(Entity fromAsset)
     {
         base.CopyValues(fromAsset);
 
@@ -21,8 +22,8 @@ public class Character : Serializable
             HP = assetAsChar.HP;
             Strength = assetAsChar.Strength;
             AP = assetAsChar.AP;
-            Items = assetAsChar.Items;
-            Spells = assetAsChar.Spells;
+            Items = new List<Item>(assetAsChar.Items);
+            Spells = new List<Spell>(assetAsChar.Spells);
         }
     }
 }

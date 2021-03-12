@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6840572222c595459f4cd348eda04fe, type: 3}
-  m_Name: Character 1
+  m_Name: Jean
   m_EditorClassIdentifier: 
-  Name: 
+  Id: 70bb39d6-a160-4286-b5d4-3c084c626461
+  Name: Jean
   Class: 0
-  HP: 0
-  Strength: 0
-  AP: 0
-  Items: []
-  Spells: []
+  HP: 12
+  Strength: 4
+  AP: 6
+  Items:
+  - {fileID: 11400000, guid: b23eada1c570f3247a53aeb8e154f940, type: 2}
+  Spells:
+  - {fileID: 11400000, guid: e3b57975ac3ea384ba97f7493b81b3a2, type: 2}

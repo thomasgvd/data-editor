@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6840572222c595459f4cd348eda04fe, type: 3}
-  m_Name: Character 0
+  m_Script: {fileID: 11500000, guid: bc39666f7128bf04ea313177436593f3, type: 3}
+  m_Name: Heal
   m_EditorClassIdentifier: 
-  Name: 
-  Class: 0
-  HP: 0
-  Strength: 0
-  AP: 0
-  Items: []
-  Spells: []
+  Id: 721afbf2-066f-4b7f-9736-b22c9183557e
+  Name: Heal
+  Description: A basic heal
+  Effects:
+  - Type: 1

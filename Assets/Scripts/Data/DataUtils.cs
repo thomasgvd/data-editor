@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 
 public static class DataUtils
 {
@@ -10,15 +9,18 @@ public static class DataUtils
     public static readonly string SpellsFolder = "Spells";
     public static readonly string AssetExtension = "asset";
 
-    public static List<Serializable> Characters;
-    public static List<Serializable> Items;
-    public static List<Serializable> Spells;
+    public static List<Entity> Characters;
+    public static List<Entity> Items;
+    public static List<Entity> Spells;
 
-    public static void ReloadData()
+    public static bool DataLoaded;
+
+    public static void LoadData()
     {
-        Characters = new List<Serializable>(Resources.LoadAll<Character>(CharactersFolder));
-        Items = new List<Serializable>(Resources.LoadAll<Item>(ItemsFolder));
-        Spells = new List<Serializable>(Resources.LoadAll<Spell>(SpellsFolder));
+        Characters = new List<Entity>(Resources.LoadAll<Character>(CharactersFolder));
+        Items = new List<Entity>(Resources.LoadAll<Item>(ItemsFolder));
+        Spells = new List<Entity>(Resources.LoadAll<Spell>(SpellsFolder));
+        DataLoaded = true;
     }
 
     public static string GetFolderName(int currentTab)
@@ -31,7 +33,7 @@ public static class DataUtils
             return SpellsFolder;
     }
 
-    public static List<Serializable> GetEntitiesToDisplay(int currentTab)
+    public static List<Entity> GetEntitiesToDisplay(int currentTab)
     {
         if (currentTab == 0)
             return Characters;
@@ -41,15 +43,15 @@ public static class DataUtils
             return Spells;
     }
 
-    public static Serializable GenerateNewAsset(List<Serializable> entities, int type)
+    public static Entity GenerateNewAsset(List<Entity> entities, int type)
     {
-        Serializable asset = InstantiateEntity(type);
+        Entity asset = InstantiateEntity(type);
         entities.Add(asset);
         asset.Name = asset.name;
         return asset;
     }
 
-    public static Serializable InstantiateEntity(int type)
+    public static Entity InstantiateEntity(int type)
     {
         if (type == 0)
             return ScriptableObject.CreateInstance<Character>();

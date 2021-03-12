@@ -12,7 +12,7 @@ public class DataEditorWindow : EditorWindow
     [MenuItem("Tools/Data Editor")]
     public static void Display()
     {
-        DataUtils.ReloadData();
+        DataUtils.LoadData();
         GetWindow<DataEditorWindow>("Data Editor");
     }
 
@@ -24,7 +24,10 @@ public class DataEditorWindow : EditorWindow
 
     private void DisplayUI(int currentTab)
     {
-        List<Serializable> entitiesToDisplay = DataUtils.GetEntitiesToDisplay(currentTab);
+        if (!DataUtils.DataLoaded) 
+            DataUtils.LoadData();
+
+        List<Entity> entitiesToDisplay = DataUtils.GetEntitiesToDisplay(currentTab);
         string folderName = DataUtils.GetFolderName(currentTab);
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, true, true, GUILayout.Width(position.width), GUILayout.Height(position.height));
@@ -44,14 +47,14 @@ public class DataEditorWindow : EditorWindow
     private void DisplayReloadButton()
     {
         if (GUILayout.Button("Reload"))
-            DataUtils.ReloadData();
+            DataUtils.LoadData();
     }
 
-    private void DisplayNewButton(List<Serializable> entities, string folderName)
+    private void DisplayNewButton(List<Entity> entities, string folderName)
     {
         if (GUILayout.Button("New"))
         {
-            Serializable asset = DataUtils.InstantiateEntity(currentTab);
+            Entity asset = DataUtils.InstantiateEntity(currentTab);
 
             string assetPath = DataUtils.GetPath(folderName, asset.GetType() + " 0");
 
@@ -63,7 +66,7 @@ public class DataEditorWindow : EditorWindow
 
     }
 
-    private void DisplayEntities(List<Serializable> entities, string folderName)
+    private void DisplayEntities(List<Entity> entities, string folderName)
     {
         for (int i = entities.Count - 1; i >= 0; i--)
         {
@@ -78,20 +81,17 @@ public class DataEditorWindow : EditorWindow
         }
     }
 
-    private void ManageEditButton(Serializable entity)
+    private void ManageEditButton(Entity entity)
     {
         if (GUILayout.Button("Edit"))
-        {
             Selection.activeObject = entity;
-            Debug.Log(entity.JsonRepresentation);
-        }
     }
 
-    private void ManageDuplicateButton(List<Serializable> entities, int i, string folderName)
+    private void ManageDuplicateButton(List<Entity> entities, int i, string folderName)
     {
         if (GUILayout.Button("Duplicate"))
         {
-            Serializable asset = DataUtils.GenerateNewAsset(entities, currentTab);
+            Entity asset = DataUtils.GenerateNewAsset(entities, currentTab);
             asset.CopyValues(entities[i]);
 
             string assetPath = DataUtils.GetPath(folderName, entities[i].name);
@@ -99,7 +99,7 @@ public class DataEditorWindow : EditorWindow
         }
     }
 
-    private void ManageDeleteButton(List<Serializable> entities, int i, string folderName)
+    private void ManageDeleteButton(List<Entity> entities, int i, string folderName)
     {
         if (GUILayout.Button("Delete"))
         {
