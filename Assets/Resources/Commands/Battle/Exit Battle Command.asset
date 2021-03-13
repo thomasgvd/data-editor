@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc39666f7128bf04ea313177436593f3, type: 3}
-  m_Name: Heal
+  m_Script: {fileID: 11500000, guid: d8126e71f3cb1f54eb6889b43d8ed539, type: 3}
+  m_Name: Exit Battle Command
   m_EditorClassIdentifier: 
-  Id: 721afbf2-066f-4b7f-9736-b22c9183557e
-  Name: Heal
-  Description: Restores some health
-  ApCost: 6
-  Effects:
-  - Type: 1
-    Value: 4
+  keyword: exit
+  info: exits a battle
+  args: []
+  usedInBattle: 1

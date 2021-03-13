@@ -537,8 +537,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2108033119}
   - component: {fileID: 2108033118}
+  - component: {fileID: 2108033120}
   m_Layer: 0
-  m_Name: GameController
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -570,6 +571,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2108033120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108033117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3544532078e0e4548aab2e105a0bb961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3915588361987877209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -636,6 +649,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_enableAutoSizing
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3077116006685202366, guid: 2e7bfae9c5cda5b4492b576f4e8198a6,
+        type: 3}
+      propertyPath: m_ScrollSensitivity
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3915588363386538409, guid: 2e7bfae9c5cda5b4492b576f4e8198a6,
         type: 3}

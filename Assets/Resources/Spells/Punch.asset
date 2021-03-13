@@ -15,5 +15,7 @@ MonoBehaviour:
   Id: 1081b567-bf2b-4855-897f-2937a6a703a6
   Name: Punch
   Description: Deals physical damage to target
+  ApCost: 3
   Effects:
   - Type: 0
+    Value: 6

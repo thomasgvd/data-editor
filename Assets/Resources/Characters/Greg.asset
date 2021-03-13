@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6840572222c595459f4cd348eda04fe, type: 3}
-  m_Name: Gregory
+  m_Name: Greg
   m_EditorClassIdentifier: 
   Id: 0eeca9b1-157d-4946-8cbe-5df750a6a38a
-  Name: Gregory
+  Name: Greg
   Class: 1
   HP: 12
   Strength: 2
   AP: 6
   Items: []
-  Spells: []
+  Spells:
+  - {fileID: 11400000, guid: b6898b22c04334e428e10581b3ede6de, type: 2}

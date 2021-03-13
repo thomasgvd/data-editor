@@ -3,6 +3,7 @@
 public class SpellData : EntityData
 {
     public string Description;
+    public int ApCost;
     public List<Effect> Effects;
 
     public override void CopyValues(EntityData fromAsset)
@@ -14,6 +15,7 @@ public class SpellData : EntityData
             SpellData assetAsSpell = fromAsset as SpellData;
 
             Description = assetAsSpell.Description;
+            ApCost = assetAsSpell.ApCost;
             Effects = new List<Effect>(assetAsSpell.Effects);
         }
     }

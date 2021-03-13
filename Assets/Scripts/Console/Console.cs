@@ -1,83 +1,79 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using System;
 
 public class Console : MonoBehaviour, IConsole
 {
-    public List<Message> Messages { get; set; }
+    public string Prefix { get; set; } = "/";
+    public List<Message> Messages { get; set; } 
     public int MaxMessageCount { get; set; } = 25;
     public List<ICommand> Commands { get; set; }
+    public PassTurnCommand PassCommand { get; set; }
+    public ExitBattleCommand ExitCommand { get; set; }
+    public UseSpellCommand SpellCommand { get; set; }
+    public TurnInfoCommand TurnInfoCommand { get; set; }
 
-    [SerializeField] private string prefix = "/";
     [SerializeField] private TMP_InputField inputField;
-
     [SerializeField] private GameObject chatPanel;
     [SerializeField] private GameObject messageObject;
 
-    private void Awake() => Messages = new List<Message>();
+    private BattleController battleController;
+    private CommandHandler commandHandler;
+
+    private void Awake()
+    {
+        commandHandler = new CommandHandler(this);
+        Messages = new List<Message>();
+        battleController = FindObjectOfType<BattleController>();
+    }
 
     private void Start()
     {
         Commands = new List<ICommand>(Resources.LoadAll<Command>(DataUtils.CommandsFolder));
+        TurnInfoCommand = Commands.Find(c => c.GetType() == typeof(TurnInfoCommand)) as TurnInfoCommand;
+        PassCommand = Commands.Find(c => c.GetType() == typeof(PassTurnCommand)) as PassTurnCommand;
+        ExitCommand = Commands.Find(c => c.GetType() == typeof(ExitBattleCommand)) as ExitBattleCommand;
+        SpellCommand = Commands.Find(c => c.GetType() == typeof(UseSpellCommand)) as UseSpellCommand;
         inputField.ActivateInputField();
+    }
+
+    private void OnEnable()
+    {
+        battleController.TurnInitialized += OnTurnInitializedEventHandler;
+        battleController.BattleEnded += OnBattleEndedEventHandler;
+    }
+
+    private void OnDisable()
+    {
+        battleController.TurnInitialized -= OnTurnInitializedEventHandler;
+        battleController.BattleEnded -= OnBattleEndedEventHandler;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
-            ProcessInput(inputField.text);
+        {
+            string input = inputField.text;
+            ResetInputField();
+            HandleInput(input);
+        }
     }
 
-    private void ProcessInput(string input)
+    private void HandleInput(string input)
     {
-        ResetInputField();
-
-        if (!input.StartsWith(prefix))
+        if (!input.StartsWith(Prefix))
         {
             AddMessage(MessageUtils.InvalidInput);
             return;
         }
 
-        string[] words = ComputeInput(input);
-
+        string[] words = InputUtils.ProcessInput(input, Prefix);
         string keyword = words[0];
         string[] args = words.Skip(1).ToArray();
-
-        ProcessCommand(keyword, args);
-    }
-
-    private string[] ComputeInput(string input)
-    {
-        input = input.Remove(0, prefix.Length);
-        string[] words = input.Contains('"') ? input.Split('"') : input.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            if (words[i][0].Equals(' ') || words[i][words[i].Length - 1].Equals(' ')) words[i] = words[i].Trim(' ');
-        }
-
-        return words;
-    }
-
-    private void ProcessCommand(string keyword, string[] args)
-    {
-        string result = string.Empty;
-        bool commandFound = false;
-
-        foreach (ICommand command in Commands)
-        {
-            if (command.Keyword.Equals(keyword))
-            {
-                result = command.Process(args, this);
-                commandFound = true;
-                break;
-            }
-        }
-
-        if (!commandFound)
-            result = MessageUtils.CommandNotFound;
-
+        string result = commandHandler.ProcessCommand(keyword, args, battleController);
         AddMessage(result);
     }
 
@@ -103,5 +99,20 @@ public class Console : MonoBehaviour, IConsole
     {
         inputField.text = string.Empty;
         inputField.ActivateInputField();
+    }
+
+    private void OnTurnInitializedEventHandler(object sender, EventArgs e) => SendTurnInfoCommand();
+    private void OnBattleEndedEventHandler(object sender, EventArgs e) => SendExitBattleCommand();
+
+    private void SendExitBattleCommand()
+    {
+        string result = commandHandler.ProcessCommand(ExitCommand.Keyword, new string[] { }, battleController);
+        AddMessage(result);
+    }
+
+    private void SendTurnInfoCommand()
+    {
+        string result = commandHandler.ProcessCommand(TurnInfoCommand.Keyword, new string[] { }, battleController);
+        AddMessage(result);
     }
 }

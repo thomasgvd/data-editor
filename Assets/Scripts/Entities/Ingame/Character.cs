@@ -10,9 +10,11 @@ public class Character : IEntity
     public int AP { get; set; }
     public List<Item> Items { get; set; } = new List<Item>();
     public List<Spell> Spells { get; set; } = new List<Spell>();
+    public CharacterData CharacterData { get; set; }
 
     public Character(CharacterData data, List<Spell> spells, List<Item> items)
     {
+        CharacterData = data;
         Class = data.Class;
         Name = data.Name;
         HP = data.HP;

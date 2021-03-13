@@ -1,4 +1,14 @@
-﻿public class DamageEffect : Effect
+﻿using UnityEngine;
+
+public class DamageEffect : Effect
 {
-    public new EffectType Type = EffectType.Damage;
+    public DamageEffect() : base() { }
+
+    public DamageEffect(Effect effect) : base(effect) { }
+
+    public override string Apply(Character source, Character opponent) 
+    {
+        opponent.HP -= Value;
+        return $"{opponent.Name} took {Value} damage.";
+    }
 }

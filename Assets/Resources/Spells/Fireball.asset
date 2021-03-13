@@ -15,5 +15,7 @@ MonoBehaviour:
   Id: eeedfac5-234a-4b37-8481-920a5edce38d
   Name: Fireball
   Description: Deals magical damage to target
+  ApCost: 4
   Effects:
   - Type: 0
+    Value: 8
