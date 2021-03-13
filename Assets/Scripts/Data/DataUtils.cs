@@ -5,6 +5,7 @@ public static class DataUtils
 {
     public static readonly string ResourcesFolderPath = "Assets/Resources";
     public static readonly string CharactersFolder = "Characters";
+    public static readonly string CommandsFolder = "Commands";
     public static readonly string ItemsFolder = "Items";
     public static readonly string SpellsFolder = "Spells";
     public static readonly string AssetExtension = "asset";
