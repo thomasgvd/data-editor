@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 
-public class Spell : Entity
+public class SpellData : EntityData
 {
     public string Description;
     public List<Effect> Effects;
 
-    public override void CopyValues(Entity fromAsset)
+    public override void CopyValues(EntityData fromAsset)
     {
         base.CopyValues(fromAsset);
 
-        if (fromAsset is Spell)
+        if (fromAsset is SpellData)
         {
-            Spell assetAsSpell = fromAsset as Spell;
+            SpellData assetAsSpell = fromAsset as SpellData;
 
             Description = assetAsSpell.Description;
             Effects = new List<Effect>(assetAsSpell.Effects);

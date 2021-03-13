@@ -2,5 +2,6 @@
 {
     string Keyword { get; }
     string Info { get; }
-    string Process(string[] args);
+    string[] Args { get; }
+    string Process(string[] args, IConsole console);
 }

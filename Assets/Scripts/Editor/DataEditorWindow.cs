@@ -27,7 +27,7 @@ public class DataEditorWindow : EditorWindow
         if (!DataUtils.DataLoaded) 
             DataUtils.LoadData();
 
-        List<Entity> entitiesToDisplay = DataUtils.GetEntitiesToDisplay(currentTab);
+        List<EntityData> entitiesToDisplay = DataUtils.GetEntitiesToDisplay(currentTab);
         string folderName = DataUtils.GetFolderName(currentTab);
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, true, true, GUILayout.Width(position.width), GUILayout.Height(position.height));
@@ -50,11 +50,11 @@ public class DataEditorWindow : EditorWindow
             DataUtils.LoadData();
     }
 
-    private void DisplayNewButton(List<Entity> entities, string folderName)
+    private void DisplayNewButton(List<EntityData> entities, string folderName)
     {
         if (GUILayout.Button("New"))
         {
-            Entity asset = DataUtils.InstantiateEntity(currentTab);
+            EntityData asset = DataUtils.InstantiateEntity(currentTab);
 
             string assetPath = DataUtils.GetPath(folderName, asset.GetType() + " 0");
 
@@ -66,7 +66,7 @@ public class DataEditorWindow : EditorWindow
 
     }
 
-    private void DisplayEntities(List<Entity> entities, string folderName)
+    private void DisplayEntities(List<EntityData> entities, string folderName)
     {
         for (int i = entities.Count - 1; i >= 0; i--)
         {
@@ -81,17 +81,17 @@ public class DataEditorWindow : EditorWindow
         }
     }
 
-    private void ManageEditButton(Entity entity)
+    private void ManageEditButton(EntityData entity)
     {
         if (GUILayout.Button("Edit"))
             Selection.activeObject = entity;
     }
 
-    private void ManageDuplicateButton(List<Entity> entities, int i, string folderName)
+    private void ManageDuplicateButton(List<EntityData> entities, int i, string folderName)
     {
         if (GUILayout.Button("Duplicate"))
         {
-            Entity asset = DataUtils.GenerateNewAsset(entities, currentTab);
+            EntityData asset = DataUtils.GenerateNewAsset(entities, currentTab);
             asset.CopyValues(entities[i]);
 
             string assetPath = DataUtils.GetPath(folderName, entities[i].name);
@@ -99,7 +99,7 @@ public class DataEditorWindow : EditorWindow
         }
     }
 
-    private void ManageDeleteButton(List<Entity> entities, int i, string folderName)
+    private void ManageDeleteButton(List<EntityData> entities, int i, string folderName)
     {
         if (GUILayout.Button("Delete"))
         {

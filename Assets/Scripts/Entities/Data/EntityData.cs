@@ -3,7 +3,7 @@ using System;
 using UnityEditor;
 using System.IO;
 
-public abstract class Entity : ScriptableObject
+public abstract class EntityData : ScriptableObject
 {
     [HideInInspector] public string Id = Guid.NewGuid().ToString();
     public string Name;
@@ -21,5 +21,5 @@ public abstract class Entity : ScriptableObject
             AssetDatabase.RenameAsset(path, Name);
     }
 
-    public virtual void CopyValues(Entity fromAsset) => Name = fromAsset.Name;
+    public virtual void CopyValues(EntityData fromAsset) => Name = fromAsset.Name;
 }

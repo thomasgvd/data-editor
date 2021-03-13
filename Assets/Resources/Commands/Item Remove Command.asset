@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc39666f7128bf04ea313177436593f3, type: 3}
-  m_Name: Heal
+  m_Script: {fileID: 11500000, guid: 1ca15b0384c75744da865eb57f6ae533, type: 3}
+  m_Name: Item Remove Command
   m_EditorClassIdentifier: 
-  Id: 721afbf2-066f-4b7f-9736-b22c9183557e
-  Name: Heal
-  Description: Restores some health
-  Effects:
-  - Type: 1
+  keyword: remove_item
+  info: remove an item from a character
+  args:
+  - item
+  - character
+  commandAction: 1

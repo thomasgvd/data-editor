@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: eeedfac5-234a-4b37-8481-920a5edce38d
   Name: Fireball
-  Description: Throws a basic fireball
+  Description: Deals magical damage to target
   Effects:
   - Type: 0

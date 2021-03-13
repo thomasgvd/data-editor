@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Help Command
   m_EditorClassIdentifier: 
   keyword: help
-  info: Display all commands on the screen
+  info: displays all commands on the screen
+  args: []

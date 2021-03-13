@@ -2,24 +2,20 @@
 using UnityEngine;
 using TMPro;
 using System.Linq;
-using System;
 
-public class Console : MonoBehaviour
+public class Console : MonoBehaviour, IConsole
 {
-    public static List<ICommand> Commands;
-    public const string InvalidInput = "Input is invalid.";
-    public const string CommandNotFound = "Command doesn't exist.";
+    public List<Message> Messages { get; set; }
+    public int MaxMessageCount { get; set; } = 25;
+    public List<ICommand> Commands { get; set; }
 
     [SerializeField] private string prefix = "/";
     [SerializeField] private TMP_InputField inputField;
-    [SerializeField] private int maxMessageCount = 25;
 
     [SerializeField] private GameObject chatPanel;
     [SerializeField] private GameObject messageObject;
 
-    private List<Message> messages;
-
-    private void Awake() => messages = new List<Message>();
+    private void Awake() => Messages = new List<Message>();
 
     private void Start()
     {
@@ -39,13 +35,11 @@ public class Console : MonoBehaviour
 
         if (!input.StartsWith(prefix))
         {
-            AddMessage(InvalidInput);
+            AddMessage(MessageUtils.InvalidInput);
             return;
         }
 
-        input = input.Remove(0, prefix.Length);
-
-        string[] words = input.Split(' ');
+        string[] words = ComputeInput(input);
 
         string keyword = words[0];
         string[] args = words.Skip(1).ToArray();
@@ -53,36 +47,51 @@ public class Console : MonoBehaviour
         ProcessCommand(keyword, args);
     }
 
+    private string[] ComputeInput(string input)
+    {
+        input = input.Remove(0, prefix.Length);
+        string[] words = input.Contains('"') ? input.Split('"') : input.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (words[i][0].Equals(' ') || words[i][words[i].Length - 1].Equals(' ')) words[i] = words[i].Trim(' ');
+        }
+
+        return words;
+    }
+
     private void ProcessCommand(string keyword, string[] args)
     {
         string result = string.Empty;
+        bool commandFound = false;
 
         foreach (ICommand command in Commands)
         {
             if (command.Keyword.Equals(keyword))
             {
-                result = command.Process(args);
-                return;
+                result = command.Process(args, this);
+                commandFound = true;
+                break;
             }
         }
 
-        if (result == string.Empty)
-            result = CommandNotFound;
+        if (!commandFound)
+            result = MessageUtils.CommandNotFound;
 
         AddMessage(result);
     }
 
     private void AddMessage(string text)
     {
-        if (messages.Count >= maxMessageCount)
+        if (Messages.Count >= MaxMessageCount)
         {
-            Destroy(messages[0].TextObject.gameObject);
-            messages.RemoveAt(0);
+            Destroy(Messages[0].TextObject.gameObject);
+            Messages.RemoveAt(0);
         }
 
         Message newMessage = new Message(text);
 
-        messages.Add(newMessage);
+        Messages.Add(newMessage);
 
         GameObject newMessageObject = Instantiate(messageObject, chatPanel.transform);
 

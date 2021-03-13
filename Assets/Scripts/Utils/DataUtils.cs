@@ -10,17 +10,17 @@ public static class DataUtils
     public static readonly string SpellsFolder = "Spells";
     public static readonly string AssetExtension = "asset";
 
-    public static List<Entity> Characters;
-    public static List<Entity> Items;
-    public static List<Entity> Spells;
+    public static List<EntityData> Characters;
+    public static List<EntityData> Items;
+    public static List<EntityData> Spells;
 
     public static bool DataLoaded;
 
     public static void LoadData()
     {
-        Characters = new List<Entity>(Resources.LoadAll<Character>(CharactersFolder));
-        Items = new List<Entity>(Resources.LoadAll<Item>(ItemsFolder));
-        Spells = new List<Entity>(Resources.LoadAll<Spell>(SpellsFolder));
+        Characters = new List<EntityData>(Resources.LoadAll<CharacterData>(CharactersFolder));
+        Items = new List<EntityData>(Resources.LoadAll<ItemData>(ItemsFolder));
+        Spells = new List<EntityData>(Resources.LoadAll<SpellData>(SpellsFolder));
         DataLoaded = true;
     }
 
@@ -34,7 +34,7 @@ public static class DataUtils
             return SpellsFolder;
     }
 
-    public static List<Entity> GetEntitiesToDisplay(int currentTab)
+    public static List<EntityData> GetEntitiesToDisplay(int currentTab)
     {
         if (currentTab == 0)
             return Characters;
@@ -44,22 +44,22 @@ public static class DataUtils
             return Spells;
     }
 
-    public static Entity GenerateNewAsset(List<Entity> entities, int type)
+    public static EntityData GenerateNewAsset(List<EntityData> entities, int type)
     {
-        Entity asset = InstantiateEntity(type);
+        EntityData asset = InstantiateEntity(type);
         entities.Add(asset);
         asset.Name = asset.name;
         return asset;
     }
 
-    public static Entity InstantiateEntity(int type)
+    public static EntityData InstantiateEntity(int type)
     {
         if (type == 0)
-            return ScriptableObject.CreateInstance<Character>();
+            return ScriptableObject.CreateInstance<CharacterData>();
         else if (type == 1)
-            return ScriptableObject.CreateInstance<Item>();
+            return ScriptableObject.CreateInstance<ItemData>();
         else
-            return ScriptableObject.CreateInstance<Spell>();
+            return ScriptableObject.CreateInstance<SpellData>();
     }
 
     public static string GetPath(string folderName, string entityName) => $"{ResourcesFolderPath}/{folderName}/{entityName}.{AssetExtension}";

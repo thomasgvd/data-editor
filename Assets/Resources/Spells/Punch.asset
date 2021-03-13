@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc39666f7128bf04ea313177436593f3, type: 3}
-  m_Name: Heal
+  m_Name: Punch
   m_EditorClassIdentifier: 
-  Id: 721afbf2-066f-4b7f-9736-b22c9183557e
-  Name: Heal
-  Description: Restores some health
+  Id: 1081b567-bf2b-4855-897f-2937a6a703a6
+  Name: Punch
+  Description: Deals physical damage to target
   Effects:
-  - Type: 1
+  - Type: 0
