@@ -15,9 +15,9 @@ MonoBehaviour:
   Id: 70bb39d6-a160-4286-b5d4-3c084c626461
   Name: Jean
   Class: 0
-  HP: 8
+  MaxHP: 8
   Strength: 4
-  AP: 6
+  MaxAP: 6
   Items:
   - {fileID: 11400000, guid: b23eada1c570f3247a53aeb8e154f940, type: 2}
   Spells:

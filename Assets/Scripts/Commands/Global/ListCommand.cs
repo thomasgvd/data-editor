@@ -5,11 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "List Command", menuName = "Commands/List")]
 public class ListCommand : Command
 {
-    public override string Process(string[] args, IConsole console)
+    // Lists the name of every entity of the given type
+    public override string Process(string[] args, GameController gameController, BattleController battleController)
     {
         if (args.Length < 1) return MessageUtils.NoDataTypeFound;
-
-        GameController gameController = FindObjectOfType<GameController>();
 
         string type = args[0];
         List<IEntity> entities;

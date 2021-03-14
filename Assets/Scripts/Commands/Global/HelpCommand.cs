@@ -4,13 +4,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Help Command", menuName = "Commands/Help")]
 public class HelpCommand : Command
 {
-    public override string Process(string[] args, IConsole console)
+    // Displays documentation for every available command
+    public override string Process(string[] args, GameController gameController, BattleController battleController)
     {
         StringBuilder builder = new StringBuilder();
 
-        foreach (ICommand command in console.Commands)
+        foreach (ICommand command in CommandUtils.Commands)
         {
-            builder.Append(command.Keyword);
+            builder.Append(MessageUtils.CommandPrefix).Append(command.Keyword);
 
             if (command.Args.Length > 0)
             {

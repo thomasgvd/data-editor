@@ -12,5 +12,5 @@ public abstract class Command : ScriptableObject, ICommand
     public string[] Args => args;
     public bool UsedInBattle => usedInBattle;
 
-    public abstract string Process(string[] args, IConsole console);
+    public abstract string Process(string[] args, GameController gameController, BattleController battleController = null);
 }

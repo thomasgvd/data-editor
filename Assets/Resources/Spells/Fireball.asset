@@ -18,4 +18,4 @@ MonoBehaviour:
   ApCost: 4
   Effects:
   - Type: 0
-    Value: 8
+    Value: 5

@@ -1,13 +1,10 @@
 ﻿using System;
 
-public class HealingEffect : Effect
+public class HealingEffect : IEffectStrategy
 {
-    public HealingEffect() : base() { }
-    public HealingEffect(Effect effect) : base(effect) { }
-
-    public override string Apply(Character source, Character opponent)
+    public string Apply(Character source, Character opponent, int value)
     {
-        source.HP = Math.Min(source.HP + Value, source.CharacterData.HP);
-        return $"{source.Name} healed for {Value} HP.";
+        source.CurrentHP = Math.Min(source.CurrentHP + value, source.CharacterData.MaxHP);
+        return $"{source.Name} healed for {value} HP.";
     }
 }

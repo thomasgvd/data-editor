@@ -5,11 +5,10 @@ public class SpellCommand : Command
 {
     [SerializeField] private CommandAction commandAction;
 
-    public override string Process(string[] args, IConsole console)
+    // Adds or removes a spell from a character
+    public override string Process(string[] args, GameController gameController, BattleController battleController)
     {
         if (args.Length < 2) return MessageUtils.InvalidInput;
-
-        GameController gameController = FindObjectOfType<GameController>();
 
         Spell spell = gameController.Spells.Find(i => i.Name.Equals(args[0], System.StringComparison.OrdinalIgnoreCase));
         Character character = gameController.Characters.Find(c => c.Name.Equals(args[1], System.StringComparison.OrdinalIgnoreCase));

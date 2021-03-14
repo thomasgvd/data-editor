@@ -1,5 +1,6 @@
 ﻿using TMPro;
 
+// A message is displayed on the console
 public class Message
 {
     public string Text { get; set; }

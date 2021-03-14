@@ -1,14 +1,8 @@
-﻿using UnityEngine;
-
-public class DamageEffect : Effect
+﻿public class DamageEffect : IEffectStrategy
 {
-    public DamageEffect() : base() { }
-
-    public DamageEffect(Effect effect) : base(effect) { }
-
-    public override string Apply(Character source, Character opponent) 
+    public string Apply(Character source, Character opponent, int value) 
     {
-        opponent.HP -= Value;
-        return $"{opponent.Name} took {Value} damage.";
+        opponent.CurrentHP -= value;
+        return $"{opponent.Name} took {value} damage.";
     }
 }

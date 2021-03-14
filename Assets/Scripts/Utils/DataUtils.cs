@@ -5,58 +5,61 @@ public static class DataUtils
 {
     public static readonly string ResourcesFolderPath = "Assets/Resources";
     public static readonly string CharactersFolder = "Characters";
-    public static readonly string CommandsFolder = "Commands";
     public static readonly string ItemsFolder = "Items";
     public static readonly string SpellsFolder = "Spells";
     public static readonly string AssetExtension = "asset";
 
-    public static List<EntityData> Characters;
-    public static List<EntityData> Items;
-    public static List<EntityData> Spells;
+    public static List<EntityData> CharactersData { get; set; }
+    public static List<EntityData> ItemsData { get; set; }
+    public static List<EntityData> SpellsData { get; set; }
 
-    public static bool DataLoaded;
+    public static bool DataLoaded; // Used to avoid errors on script reload with Data Editor Window open
 
-    public static void LoadData()
+    public static void LoadStaticData()
     {
-        Characters = new List<EntityData>(Resources.LoadAll<CharacterData>(CharactersFolder));
-        Items = new List<EntityData>(Resources.LoadAll<ItemData>(ItemsFolder));
-        Spells = new List<EntityData>(Resources.LoadAll<SpellData>(SpellsFolder));
+        CharactersData = new List<EntityData>(Resources.LoadAll<CharacterData>(CharactersFolder));
+        ItemsData = new List<EntityData>(Resources.LoadAll<ItemData>(ItemsFolder));
+        SpellsData = new List<EntityData>(Resources.LoadAll<SpellData>(SpellsFolder));
         DataLoaded = true;
     }
 
-    public static string GetFolderName(int currentTab)
+    public static void ReloadEditorDataFromStaticData()
     {
-        if (currentTab == 0)
+        foreach (ItemData itemData in ItemsData)
+            itemData.Name = itemData.name;
+
+        foreach (SpellData spellData in SpellsData)
+            spellData.Name = spellData.name;
+
+        foreach (CharacterData characterData in CharactersData)
+            characterData.Name = characterData.name;
+    }
+
+    public static string GetFolderName(DataType type)
+    {
+        if (type == DataType.Characters)
             return CharactersFolder;
-        else if (currentTab == 1)
+        else if (type == DataType.Items)
             return ItemsFolder;
         else
             return SpellsFolder;
     }
 
-    public static List<EntityData> GetEntitiesToDisplay(int currentTab)
+    public static List<EntityData> GetEntitiesToDisplay(DataType type)
     {
-        if (currentTab == 0)
-            return Characters;
-        else if (currentTab == 1)
-            return Items;
+        if (type == DataType.Characters)
+            return CharactersData;
+        else if (type == DataType.Items)
+            return ItemsData;
         else
-            return Spells;
+            return SpellsData;
     }
 
-    public static EntityData GenerateNewAsset(List<EntityData> entities, int type)
+    public static EntityData InstantiateEntity(DataType type)
     {
-        EntityData asset = InstantiateEntity(type);
-        entities.Add(asset);
-        asset.Name = asset.name;
-        return asset;
-    }
-
-    public static EntityData InstantiateEntity(int type)
-    {
-        if (type == 0)
+        if (type == DataType.Characters)
             return ScriptableObject.CreateInstance<CharacterData>();
-        else if (type == 1)
+        else if (type == DataType.Items)
             return ScriptableObject.CreateInstance<ItemData>();
         else
             return ScriptableObject.CreateInstance<SpellData>();

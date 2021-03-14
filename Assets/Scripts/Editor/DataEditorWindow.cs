@@ -12,7 +12,7 @@ public class DataEditorWindow : EditorWindow
     [MenuItem("Tools/Data Editor")]
     public static void Display()
     {
-        DataUtils.LoadData();
+        DataUtils.LoadStaticData();
         GetWindow<DataEditorWindow>("Data Editor");
     }
 
@@ -24,11 +24,12 @@ public class DataEditorWindow : EditorWindow
 
     private void DisplayUI(int currentTab)
     {
+        // Retrieves all Scriptable Objects data in static variables to display in the editor
         if (!DataUtils.DataLoaded) 
-            DataUtils.LoadData();
+            DataUtils.LoadStaticData();
 
-        List<EntityData> entitiesToDisplay = DataUtils.GetEntitiesToDisplay(currentTab);
-        string folderName = DataUtils.GetFolderName(currentTab);
+        List<EntityData> entitiesToDisplay = DataUtils.GetEntitiesToDisplay((DataType)currentTab);
+        string folderName = DataUtils.GetFolderName((DataType)currentTab);
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, true, true, GUILayout.Width(position.width), GUILayout.Height(position.height));
 
@@ -42,28 +43,6 @@ public class DataEditorWindow : EditorWindow
         GUILayout.Space(10);
 
         GUILayout.EndScrollView();
-    }
-
-    private void DisplayReloadButton()
-    {
-        if (GUILayout.Button("Reload"))
-            DataUtils.LoadData();
-    }
-
-    private void DisplayNewButton(List<EntityData> entities, string folderName)
-    {
-        if (GUILayout.Button("New"))
-        {
-            EntityData asset = DataUtils.InstantiateEntity(currentTab);
-
-            string assetPath = DataUtils.GetPath(folderName, asset.GetType() + " 0");
-
-            AssetDatabase.CreateAsset(asset, AssetDatabase.GenerateUniqueAssetPath(assetPath));
-            entities.Add(asset);
-
-            asset.Name = asset.name;
-        }
-
     }
 
     private void DisplayEntities(List<EntityData> entities, string folderName)
@@ -81,6 +60,27 @@ public class DataEditorWindow : EditorWindow
         }
     }
 
+    private void DisplayReloadButton()
+    {
+        // Reloads static variables from the Scriptable Objects and update their "Name" property with the assets names
+        if (GUILayout.Button("Reload"))
+        {
+            DataUtils.LoadStaticData();
+            DataUtils.ReloadEditorDataFromStaticData();
+        }
+    }
+
+    private void DisplayNewButton(List<EntityData> entities, string folderName)
+    {
+        if (GUILayout.Button("New"))
+        {
+            EntityData asset = DataUtils.InstantiateEntity((DataType)currentTab);
+            CreateAssetAndAddToEntities(asset, entities, asset.GetType() + " 0", folderName);
+
+            asset.Name = asset.name;
+        }
+    }
+
     private void ManageEditButton(EntityData entity)
     {
         if (GUILayout.Button("Edit"))
@@ -91,11 +91,11 @@ public class DataEditorWindow : EditorWindow
     {
         if (GUILayout.Button("Duplicate"))
         {
-            EntityData asset = DataUtils.GenerateNewAsset(entities, currentTab);
-            asset.CopyValues(entities[i]);
+            EntityData asset = DataUtils.InstantiateEntity((DataType)currentTab);
+            CreateAssetAndAddToEntities(asset, entities, entities[i].name, folderName);
 
-            string assetPath = DataUtils.GetPath(folderName, entities[i].name);
-            AssetDatabase.CreateAsset(asset, AssetDatabase.GenerateUniqueAssetPath(assetPath));
+            asset.CopyValues(entities[i]);
+            asset.Name = asset.name;
         }
     }
 
@@ -106,5 +106,12 @@ public class DataEditorWindow : EditorWindow
             AssetDatabase.DeleteAsset(DataUtils.GetPath(folderName, entities[i].name));
             entities.Remove(entities[i]);
         }
+    }
+
+    private void CreateAssetAndAddToEntities(EntityData asset, List<EntityData> entities, string assetName, string folderName)
+    {
+        string assetPath = DataUtils.GetPath(folderName, assetName);
+        AssetDatabase.CreateAsset(asset, AssetDatabase.GenerateUniqueAssetPath(assetPath));
+        entities.Add(asset);
     }
 }

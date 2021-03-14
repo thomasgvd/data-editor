@@ -12,6 +12,7 @@ public abstract class EntityData : ScriptableObject
         get => JsonUtility.ToJson(this);
     }
 
+    // Updates the asset's name when the "Name" property of the EntityData is modified
     private void OnValidate()
     {
         string path = AssetDatabase.GetAssetPath(this);
@@ -21,5 +22,6 @@ public abstract class EntityData : ScriptableObject
             AssetDatabase.RenameAsset(path, Name);
     }
 
-    public virtual void CopyValues(EntityData fromAsset) => Name = fromAsset.Name;
+    // Used for duplication
+    public abstract void CopyValues(EntityData fromAsset);
 }

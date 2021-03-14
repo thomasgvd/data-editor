@@ -11,36 +11,36 @@ public class BattleController : MonoBehaviour
     public Character CharacterA { get; set; }
     public Character CharacterB { get; set; }
 
+    // Initializes starting stats and picks a random character to play the first turn
     public void InitBattle(Character a, Character b)
     {
         InBattle = true;
         CharacterA = a;
         CharacterB = b;
 
-        CharacterA.HP = CharacterA.CharacterData.HP;
-        CharacterB.HP = CharacterB.CharacterData.HP;
+        CharacterA.CurrentHP = CharacterA.CharacterData.MaxHP;
+        CharacterB.CurrentHP = CharacterB.CharacterData.MaxHP;
 
-        CharacterA.AP = CharacterA.CharacterData.AP;
-        CharacterB.AP = CharacterB.CharacterData.AP;
+        CharacterA.CurrentAP = CharacterA.CharacterData.MaxAP;
+        CharacterB.CurrentAP = CharacterB.CharacterData.MaxAP;
 
         CurrentlyPlayingCharacter = new Character[] { CharacterA, CharacterB }[UnityEngine.Random.Range(0, 2)];
-
-        OnTurnInitialized();
     }
 
     public void ChangeTurn()
     {
         CurrentlyPlayingCharacter = CurrentlyPlayingCharacter == CharacterA ? CharacterB : CharacterA;
-        CurrentlyPlayingCharacter.AP = CurrentlyPlayingCharacter.CharacterData.AP;
-        OnTurnInitialized();
+        CurrentlyPlayingCharacter.CurrentAP = CurrentlyPlayingCharacter.CharacterData.MaxAP;
     }
 
-    public void CheckState()
+    public BattleUpdate CheckState()
     {
-        if (CharacterA.HP <= 0 || CharacterB.HP <= 0)
-            OnBattleEnded();
+        if (!InBattle || CharacterA is null || CharacterB is null) return BattleUpdate.Error;
+
+        if (CharacterA.CurrentHP <= 0 || CharacterB.CurrentHP <= 0)
+            return BattleUpdate.Ended;
         else
-            OnTurnInitialized();
+            return BattleUpdate.Continue;
     }
 
     public void EndBattle()
@@ -50,7 +50,4 @@ public class BattleController : MonoBehaviour
         CharacterB = null;
         CurrentlyPlayingCharacter = null;
     }
-
-    private void OnTurnInitialized() => TurnInitialized?.Invoke(this, EventArgs.Empty);
-    private void OnBattleEnded() => BattleEnded?.Invoke(this, EventArgs.Empty);
 }

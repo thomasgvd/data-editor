@@ -1,5 +1,4 @@
-﻿
-// todo: make into real class with effects
+﻿// Doesn't currently have any effect in the game
 public enum Class
 {
     Iop,

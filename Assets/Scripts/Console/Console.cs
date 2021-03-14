@@ -1,82 +1,78 @@
 ﻿using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using TMPro;
 using System.Linq;
-using System;
 
-public class Console : MonoBehaviour, IConsole
+public class Console : MonoBehaviour
 {
-    public string Prefix { get; set; } = "/";
     public List<Message> Messages { get; set; } 
     public int MaxMessageCount { get; set; } = 25;
-    public List<ICommand> Commands { get; set; }
-    public PassTurnCommand PassCommand { get; set; }
-    public ExitBattleCommand ExitCommand { get; set; }
-    public UseSpellCommand SpellCommand { get; set; }
-    public TurnInfoCommand TurnInfoCommand { get; set; }
 
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private GameObject chatPanel;
     [SerializeField] private GameObject messageObject;
 
-    private BattleController battleController;
-    private CommandHandler commandHandler;
+    private GameController gameController;
+    private string previousInput;
 
     private void Awake()
     {
-        commandHandler = new CommandHandler(this);
+        gameController = FindObjectOfType<GameController>();
         Messages = new List<Message>();
-        battleController = FindObjectOfType<BattleController>();
+
+        // Initializes the console with a message to help get the user started
+        AddMessage(MessageUtils.CommandHelperMessage);
     }
 
-    private void Start()
-    {
-        Commands = new List<ICommand>(Resources.LoadAll<Command>(DataUtils.CommandsFolder));
-        TurnInfoCommand = Commands.Find(c => c.GetType() == typeof(TurnInfoCommand)) as TurnInfoCommand;
-        PassCommand = Commands.Find(c => c.GetType() == typeof(PassTurnCommand)) as PassTurnCommand;
-        ExitCommand = Commands.Find(c => c.GetType() == typeof(ExitBattleCommand)) as ExitBattleCommand;
-        SpellCommand = Commands.Find(c => c.GetType() == typeof(UseSpellCommand)) as UseSpellCommand;
-        inputField.ActivateInputField();
-    }
+    private void Start() => ResetInputField();
 
-    private void OnEnable()
-    {
-        battleController.TurnInitialized += OnTurnInitializedEventHandler;
-        battleController.BattleEnded += OnBattleEndedEventHandler;
-    }
+    private void OnEnable() => gameController.AdditionalCommandProcessed += AdditionalCommandProcessedEventHandler;
 
-    private void OnDisable()
-    {
-        battleController.TurnInitialized -= OnTurnInitializedEventHandler;
-        battleController.BattleEnded -= OnBattleEndedEventHandler;
-    }
+    private void OnDisable() => gameController.AdditionalCommandProcessed -= AdditionalCommandProcessedEventHandler;
 
     private void Update()
     {
+        // Validates current input
         if (Input.GetKeyDown(KeyCode.Return))
         {
             string input = inputField.text;
+            previousInput = input;
             ResetInputField();
             HandleInput(input);
+        }
+
+        // Retrieves previous input
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            inputField.text = previousInput;
+            inputField.caretPosition = previousInput.Length;
         }
     }
 
     private void HandleInput(string input)
     {
-        if (!input.StartsWith(Prefix))
+        if (!input.StartsWith(MessageUtils.CommandPrefix))
         {
             AddMessage(MessageUtils.InvalidInput);
             return;
         }
 
-        string[] words = InputUtils.ProcessInput(input, Prefix);
-        string keyword = words[0];
-        string[] args = words.Skip(1).ToArray();
-        string result = commandHandler.ProcessCommand(keyword, args, battleController);
-        AddMessage(result);
+        string[] words = InputUtils.ProcessInput(input);
+
+        if (words.Length > 0)
+        {
+            string keyword = words[0];
+            string[] args = words.Skip(1).ToArray();
+
+            ProcessedCommand processedCommand = gameController.ProcessCommand(keyword, args);
+            AddMessage(processedCommand.Result);
+
+            // Tells the Game Controller the command has been processed and displayed so it can process additional commands if needed
+            gameController.CommandAddedToMessages(processedCommand);
+        }
     }
 
+    // Creates a new Message object, displays it and adds it to the list
     private void AddMessage(string text)
     {
         if (Messages.Count >= MaxMessageCount)
@@ -97,22 +93,15 @@ public class Console : MonoBehaviour, IConsole
 
     private void ResetInputField()
     {
-        inputField.text = string.Empty;
+        inputField.text = MessageUtils.CommandPrefix;
+        inputField.caretPosition = MessageUtils.CommandPrefix.Length;
         inputField.ActivateInputField();
     }
 
-    private void OnTurnInitializedEventHandler(object sender, EventArgs e) => SendTurnInfoCommand();
-    private void OnBattleEndedEventHandler(object sender, EventArgs e) => SendExitBattleCommand();
-
-    private void SendExitBattleCommand()
+    // Used to display messages from commands that don't come from the user's input
+    private void AdditionalCommandProcessedEventHandler(object sender, ProcessedCommandEventArgs e)
     {
-        string result = commandHandler.ProcessCommand(ExitCommand.Keyword, new string[] { }, battleController);
-        AddMessage(result);
-    }
-
-    private void SendTurnInfoCommand()
-    {
-        string result = commandHandler.ProcessCommand(TurnInfoCommand.Keyword, new string[] { }, battleController);
-        AddMessage(result);
+        if (!string.IsNullOrEmpty(e.ProcessedCommand.Result))
+            AddMessage(e.ProcessedCommand.Result);
     }
 }

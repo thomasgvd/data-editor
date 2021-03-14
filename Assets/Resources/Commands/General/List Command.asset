@@ -15,4 +15,5 @@ MonoBehaviour:
   keyword: list
   info: lists all entities of given type
   args:
-  - '[type] (characters / items / spells)'
+  - type (characters / items / spells)
+  usedInBattle: 0

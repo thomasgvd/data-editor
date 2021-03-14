@@ -15,9 +15,9 @@ MonoBehaviour:
   Id: 2d499fd0-4b67-4688-adc2-0f92700b5da2
   Name: Bob
   Class: 2
-  HP: 6
+  MaxHP: 6
   Strength: 2
-  AP: 9
+  MaxAP: 9
   Items:
   - {fileID: 11400000, guid: 405be0d22e39e714592f3e74d8acdefd, type: 2}
   Spells:

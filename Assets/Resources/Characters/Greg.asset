@@ -15,9 +15,12 @@ MonoBehaviour:
   Id: 0eeca9b1-157d-4946-8cbe-5df750a6a38a
   Name: Greg
   Class: 1
-  HP: 12
+  MaxHP: 12
   Strength: 2
-  AP: 6
-  Items: []
+  MaxAP: 6
+  Items:
+  - {fileID: 11400000, guid: b23eada1c570f3247a53aeb8e154f940, type: 2}
+  - {fileID: 11400000, guid: 289c02b27b6949046a57593e665bd0f5, type: 2}
   Spells:
   - {fileID: 11400000, guid: b6898b22c04334e428e10581b3ede6de, type: 2}
+  - {fileID: 11400000, guid: 842a6c50d5c956b43b03d8180cfd9759, type: 2}

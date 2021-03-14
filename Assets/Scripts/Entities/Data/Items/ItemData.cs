@@ -5,8 +5,6 @@
 
     public override void CopyValues(EntityData fromAsset)
     {
-        base.CopyValues(fromAsset);
-
         if (fromAsset is ItemData)
         {
             ItemData assetAsItem = fromAsset as ItemData;

@@ -6,23 +6,15 @@ public class Effect
     public EffectType Type;
     public int Value;
 
-    public Effect() {}
+    private IEffectStrategy effectStrategy;
 
-    public Effect(Effect effect)
-    {
-        Type = effect.Type;
-        Value = effect.Value;
-    }
+    public virtual string Apply(Character source, Character opponent) => effectStrategy.Apply(source, opponent, Value);
 
-    public virtual string Apply(Character source, Character opponent) {
-        return GetEffect().Apply(source, opponent);
-    }
-
-    private Effect GetEffect()
+    public void InitEffectStrategy()
     {
         if (Type == EffectType.Damage)
-            return new DamageEffect(this);
+            effectStrategy = new DamageEffect();
         else
-            return new HealingEffect(this);
+            effectStrategy = new HealingEffect();
     }
 }

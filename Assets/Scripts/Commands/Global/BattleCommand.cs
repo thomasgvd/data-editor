@@ -3,12 +3,10 @@
 [CreateAssetMenu(fileName = "Battle Command", menuName = "Commands/Battle")]
 public class BattleCommand : Command
 {
-    public override string Process(string[] args, IConsole console)
+    // Starts a battle between two chosen characters
+    public override string Process(string[] args, GameController gameController, BattleController battleController)
     {
         if (args.Length < 2) return MessageUtils.InvalidInput;
-
-        BattleController battleController = FindObjectOfType<BattleController>();
-        GameController gameController = FindObjectOfType<GameController>();
 
         Character characterA = gameController.Characters.Find(c => c.Name.Equals(args[0], System.StringComparison.OrdinalIgnoreCase));
 
@@ -18,6 +16,6 @@ public class BattleCommand : Command
 
         battleController.InitBattle(characterA, characterB);
 
-        return string.Empty;
+        return $"A battle has started between {characterA.Name} and {characterB.Name}.";
     }
 }

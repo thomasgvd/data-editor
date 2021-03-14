@@ -4,12 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Use Spell Command", menuName = "Commands/Use Spell")]
 public class UseSpellCommand : Command
 {
-    public override string Process(string[] args, IConsole console)
+    public override string Process(string[] args, GameController gameController, BattleController battleController)
     {
         if (args.Length < 1) return MessageUtils.InvalidInput;
-
-        GameController gameController = FindObjectOfType<GameController>();
-        BattleController battleController = FindObjectOfType<BattleController>();
 
         Spell spell = gameController.Spells.Find(s => s.Name.Equals(args[0], System.StringComparison.OrdinalIgnoreCase));
 
@@ -20,13 +17,12 @@ public class UseSpellCommand : Command
 
         StringBuilder builder = new StringBuilder();
 
-        if (currentCharacter.AP >= spell.ApCost)
+        if (currentCharacter.CurrentAP >= spell.ApCost)
         {
             foreach (Effect effect in spell.Effects)
                 builder.Append(effect.Apply(currentCharacter, opponentCharacter)).Append("\n");
 
-            currentCharacter.AP -= spell.ApCost;
-            battleController.CheckState();
+            currentCharacter.CurrentAP -= spell.ApCost;
         } else
             builder.Append(MessageUtils.NotEnoughAp);
 

@@ -5,11 +5,10 @@ public class ItemCommand : Command
 {
     [SerializeField] private CommandAction commandAction;
 
-    public override string Process(string[] args, IConsole console)
+    // Adds or removes an item from a character
+    public override string Process(string[] args, GameController gameController, BattleController battleController)
     {
         if (args.Length < 2) return MessageUtils.InvalidInput;
-
-        GameController gameController = FindObjectOfType<GameController>();
 
         Item item = gameController.Items.Find(i => i.Name.Equals(args[0], System.StringComparison.OrdinalIgnoreCase));
         Character character = gameController.Characters.Find(c => c.Name.Equals(args[1], System.StringComparison.OrdinalIgnoreCase));
